@@ -45,12 +45,12 @@ animation: text-shine 3s ease-in-out infinite alternate;
 66% {transform: translate(-20px, 20px) scale (0.9); }
 }
 @keyframes blob2 {
-0%, 100% { transform: translate (0px, 0px) scale(1); }
-33% { transform: translate (-40px, 60px) scale(1.05); }
-66% { transform: translate (20px, -40px) scale (0.95); }
+0%, 100% { transform: translate(0px, 0px) scale(1); }
+33% { transform: translate(-40px, 60px) scale(1.05); }
+66% { transform: translate(20px, -40px) scale (0.95); }
 }
 @keyframes blob3 {
-0%, 100% { transform: translate (0px, 0px) scale(1); }
+0%, 100% { transform: translate(0px, 0px) scale(1); }
 33% { transform: translate(20px, 140px) scale (1.15); }
 66% { transform: translate (-30px, -30px) scale (0.85); }
 }

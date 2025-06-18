@@ -1,4 +1,4 @@
-export const APP_FEATURES = [
+export const API_FEATURES = [
   {
     id: "01",
     title: "Tailored Just for You",
@@ -29,10 +29,5 @@ export const APP_FEATURES = [
     description:
       "Visualize your improvement over time and identify areas where you need more practice.",
   },
-  {
-    id: "06",
-    title: "Built for Real Scenarios",
-    description:
-      "Answer questions framed like real-world problems to improve practical understanding and confidence.",
-  },
+
 ];
