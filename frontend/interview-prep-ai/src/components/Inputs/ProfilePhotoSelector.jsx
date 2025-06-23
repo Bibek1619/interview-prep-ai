@@ -42,7 +42,7 @@ const ProfilePhotoSelector = ({ image, setImage, preview, setPreview }) => {
             <img
               src={preview || previewUrl}
               alt="profile"
-              className="w-full h-full object-cover rounded-full border border-gray-300 shadow-sm transition-all duration-300 group-hover:shadow-lg group-hover:shadow-orange-300"
+              className="w-full h-full object-cover rounded-full border border-gray-900 shadow-sm transition-all duration-300 group-hover:shadow-lg group-hover:shadow-orange-300"
             />
 
             {/* Remove Icon */}

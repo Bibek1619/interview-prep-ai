@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Input from '../../components/Inputs/Input'
+import { validateEmail } from '../../utils/helper'
 
 const Login = ({ setCurrentPage }) => {
   const [email, setEmail] = useState("")
@@ -11,7 +12,37 @@ const Login = ({ setCurrentPage }) => {
 
   const handleLogin = async (e) => {
     e.preventDefault()
-    // handle login logic here
+  
+
+
+
+    if(!validateEmail(email)){
+      setError("please enter a valid email")
+      return;
+    }
+
+
+
+    if(!password){
+      setError("please enter a password")
+      return;
+    }
+
+
+    setError("")
+
+    try{
+
+
+    }catch(error){
+      if(error.response && error.response.data.message){
+        setError(error.response.data.message)
+    }
+    else{
+      setError("An error occurred. Please try again later.")
+      }
+    }
+
   }
 
   return (

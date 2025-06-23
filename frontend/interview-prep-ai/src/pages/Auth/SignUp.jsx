@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Input from '../../components/Inputs/Input';
 import ProfilePhotoSelector from '../../components/Inputs/ProfilePhotoSelector';
+import { validateEmail } from '../../utils/helper';
+
 const SignUp = ({ setCurrentPage }) => {
   const navigate = useNavigate();
   const [profilePic, setProfilePic] = useState(null);
@@ -12,28 +14,46 @@ const SignUp = ({ setCurrentPage }) => {
 
   const handleSignUp = async (e) => {
     e.preventDefault();
-    // handle sign-up logic here
+
+    let profileImageUrl = "";
+
+    if (!fullName) {
+      setError("Please enter your full name");
+      return;
+    }
+    if (!validateEmail(email)) {
+      setError("Please enter a valid email");
+      return;
+    }
+    if (!password || password.length < 8) {
+      setError("Please enter a password with at least 8 characters");
+      return;
+    }
+
+    setError('');
+
+    try {
+      // Your sign-up logic here (e.g., API call)
+    } catch (error) {
+      if (error.response && error.response.data.message) {
+        setError(error.response.data.message);
+      } else {
+        setError("An error occurred. Please try again later.");
+      }
+    }
   };
 
   return (
-    <div className="w-[90vw] md:w-[33vw] p-7 flex flex-col justify-center">
-      <h3 className="text-lg font-semibold text-black">Create an Account</h3>
-      <p className="text-[14px] text-slate-700 mt-[5px] mb-6">
+    <div className="w-full max-w-md mx-auto p-6 sm:p-8 md:p-10 bg-white rounded-lg shadow-md">
+      <h3 className="text-xl sm:text-2xl font-semibold text-black text-center">Create an Account</h3>
+      <p className="text-sm sm:text-base text-slate-700 mt-2 mb-6 text-center">
         Join us today by entering your details below.
       </p>
 
-      <form onSubmit={handleSignUp}>
+      <form onSubmit={handleSignUp} className="space-y-4">
 
-<ProfilePhotoSelector image={profilePic} setImage={setProfilePic}
+        <ProfilePhotoSelector image={profilePic} setImage={setProfilePic} />
 
-
-
-/>
-
-
-
-
-        <div className="grid grid-cols-1 nd;grid-cols-1 gap-2">
         <Input
           value={fullName}
           onChange={(event) => setFullName(event.target.value)}
@@ -57,21 +77,23 @@ const SignUp = ({ setCurrentPage }) => {
           placeholder="Enter at least 8 characters"
           type="password"
         />
-        </div>
 
         {error && (
-          <p className="text-red-500 text-xs pb-3">{error}</p>
+          <p className="text-red-500 text-sm">{error}</p>
         )}
 
-        <button className="btn-primary" type="submit">
+        <button
+          type="submit"
+          className="w-full py-2 px-4 bg-amber-500 text-white font-bold rounded-md hover:bg-amber-600 transition cursor-pointer"
+        >
           SIGN UP
         </button>
 
-        <p className="text-[16px] text-slate-800 mt-3">
+        <p className="text-sm text-center mt-4 text-slate-800">
           Already have an account?{' '}
           <button
             type="button"
-            className="font-bold text-amber-600 underline cursor-pointer"
+            className="font-semibold text-amber-600 underline"
             onClick={() => setCurrentPage('login')}
           >
             Login
