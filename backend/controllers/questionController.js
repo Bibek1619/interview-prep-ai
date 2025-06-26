@@ -39,8 +39,54 @@ res.status(500).json({ message: "Server Error" });
 // @desc Pin or unpin a question
 // @route POST /api/questions/:id/pin
 // @access Private
-exports.togglePinQuestion = async (req, res) => {};
+exports.togglePinQuestion = async (req, res) => {
+  try {
+    const question = await Question.findById(req.params.id);
+    if (!question) {
+      return res.status(404).json({ success: false, message: "Question not found" });
+    }
+
+    // Toggle the isPinned flag
+    question.isPinned = !question.isPinned;
+    await question.save();
+
+    // ✅ Send a response
+    return res.status(200).json({
+      success: true,
+      message: `Question ${question.isPinned ? 'pinned' : 'unpinned'} successfully.`,
+      data: question,
+    });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: "Server Error", error: error.message });
+  }
+};
+
 // @desc Update a note for a question
 // @route POST /api/questions/:id/note
 // @access Private
-exports.updateQuestionNote = async (req, res) => {};
+
+
+
+exports.updateQuestionNote = async (req, res) => {
+    try{
+        const {note}=req.body;
+        const question = await Question.findById(req.params.id);
+        if (!question) {
+            return res.status(404).json({ success: false, message: "Question not found" });
+        }
+        // Update the note field
+        question.note = note ||"";
+        await question.save();
+        // ✅ Send a response
+        return res.status(200).json({
+            success: true,
+            message: "Note updated successfully.",
+            data: question,
+        });
+
+    }
+    catch (error) {
+        return res.status(500).json({ success: false, message: "Server Error", error: error.message });
+    }
+    
+};
