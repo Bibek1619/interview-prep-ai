@@ -1,39 +1,40 @@
 const questionAnswerPrompt = (role, experience, topicsToFocus, numberOfQuestions) => (`
-You are an AI that generates interview questions for a frontend developer.
-
-User Profile:
-- Role: ${role}
-- Experience: ${experience}
-- Topics to focus on: ${topicsToFocus}
+You are an AI that generates interview questions and answers.
 
 Task:
-- Generate ${numberOfQuestions} interview questions related to the above.
-- For each question, also include a sample answer.
-- Keep questions realistic and relevant to frontend development.
+- Role: ${role}
+- Experience: ${experience} years
+- Focus Topics: ${topicsToFocus}
 
-Return only valid JSON in this format:
+
+- Write ${numberOfQuestions} interview questions. 
+- For each question, generate a detailed but beginner-friendly answer. 
+- If the answer needs a code example,add a small code block inside.
+-keep formatting very clean.
+-Retutn a pure JSON array like:
 
 [
   {
-    "question": "Explain event delegation in JavaScript.",
-    "answer": "Event delegation is..."
-  },
-  ...
+    "question": "Question here?",
+    "answer": "Answer here."
+  }
 ]
 
 Important: Do NOT add any extra text. Only return valid JSON.
 `);
 
 const conceptExplainPrompt = (question) => (`
-You are an AI trained to explain technical interview questions to beginner developers.
+You are an AI trained to generate explanations for given interview question.
 
 Task:
-- Explain the following interview question in simple, clear terms.
-- Include any relevant concepts and beginner-friendly explanations.
-- If helpful, include a small, readable code example.
-- End with a short, clear title summarizing the concept.
+- Explain the following interview question and its concept in depth as if you're teaching a beginner developer.
+-Question: "${question}"
+- after the explanation ,provide a short clear title that summarizes the concept for the article or page header .
+- keep the formatting very clean and clear.
 
-Question: "${question}"
+- return the result as a valid JSON in the following format:
+
+
 
 Return the result as valid JSON in the following format:
 
@@ -42,7 +43,7 @@ Return the result as valid JSON in the following format:
   "explanation": "Detailed explanation here..."
 }
 
-Important: Only return valid JSON. No extra text.
+Important: Do NOT add any extra text outside the JSON format.only return valid JSON.
 `);
 
 module.exports = {
