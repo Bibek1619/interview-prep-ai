@@ -1,6 +1,7 @@
 import React ,{ createContext, useContext, useState } from 'react';
 import axiosInstance from '../utils/axiosinstance';
 import { API_PATHS } from '../utils/apiPaths';
+import { useEffect } from 'react';
 
 export const UserContext = createContext();
 
@@ -34,7 +35,7 @@ const UserProvider = ({ children }) => {
 
     const updateUser = (userData) => {
         setUser(userData);
-        localStorage.setItem("user", userData.token);
+        // localStorage.setItem("user", userData.token);
         setLoading(false);
     };
     const clearUser = () =>
