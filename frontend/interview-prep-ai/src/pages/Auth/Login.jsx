@@ -1,69 +1,57 @@
-import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import Input from '../../components/Inputs/Input'
-import { validateEmail } from '../../utils/helper'
-import axiosInstance from '../../utils/axiosinstance'
-import { API_PATHS } from '../../utils/apiPaths'
-import { UserContext } from '../../context/userContext'
-import { useContext } from 'react'
+import React, { useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import Input from "../../components/Inputs/Input";
+import { validateEmail } from "../../utils/helper";
+import axiosInstance from "../../utils/axiosInstance";
+import { API_PATHS } from "../../utils/apiPaths";
+import { UserContext } from "../../context/userContext";
 
 const Login = ({ setCurrentPage }) => {
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [error, setError] = useState("")
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
-
-  const {updateUser}=useContext(UserContext)
-
-  const navigate = useNavigate()
+  const { refreshUser } = useContext(UserContext);
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
-    e.preventDefault()
-  
+    e.preventDefault();
 
-
-
-    if(!validateEmail(email)){
-      setError("please enter a valid email")
+    if (!validateEmail(email)) {
+      setError("Please enter a valid email");
       return;
     }
 
-
-
-    if(!password){
-      setError("please enter a password")
+    if (!password) {
+      setError("Please enter a password");
       return;
     }
 
+    setError("");
 
-    setError("")
-
-    try{
-      const response =await axiosInstance.post(API_PATHS.AUTH.LOGIN, {
+    try {
+      const response = await axiosInstance.post(API_PATHS.AUTH.LOGIN, {
         email,
-        password
+        password,
       });
-      const {token}=response.data;
 
-      if (token){
+      const { token } = response.data;
+
+      if (token) {
         localStorage.setItem("token", token);
-        updateUser(response.data.user);
-        navigate("/dashboard");
-    
+        await refreshUser(); // ✅ fetch user after setting token
+        navigate("/dashboard"); // ✅ works without page reload
       }
-
-
-
     } catch (error) {
-  console.error("Login Error:", error); // 👈 add this
+      console.error("Login Error:", error);
 
-  if (error.response && error.response.data.message) {
-    setError(error.response.data.message);
-  } else {
-    setError("An error occurred. Please try again later.");
-  }
-}
-  }
+      if (error.response && error.response.data.message) {
+        setError(error.response.data.message);
+      } else {
+        setError("An error occurred. Please try again later.");
+      }
+    }
+  };
 
   return (
     <div className="w-[90vw] md:w-[33vw] p-7 flex flex-col justify-center">
@@ -87,31 +75,26 @@ const Login = ({ setCurrentPage }) => {
           onChange={(event) => setPassword(event.target.value)}
         />
 
+        {error && <p className="text-red-500 text-xs pb-3">{error}</p>}
 
-
-
-        {error && 
-        <p className="text-red-500 text-xs pb-3">{error}</p>
-        }
-
-
-        <button className="btn-primary" type='submit'>
+        <button className="btn-primary" type="submit">
           LOGIN
         </button>
-         <p className="text-[16px] text-slate-800 mt-3">
-        Don't have a account?{" "}
 
-        <button className="font-bold text-amber-600  underline cursor-pointer" onClick={()=>{
-          setCurrentPage('signup')
-        }} >
-
-          SignUp
-          
-        </button>
-       </p>
+        <p className="text-[16px] text-slate-800 mt-3">
+          Don't have an account?{" "}
+          <button
+            className="font-bold text-amber-600 underline cursor-pointer"
+            onClick={() => {
+              setCurrentPage("signup");
+            }}
+          >
+            SignUp
+          </button>
+        </p>
       </form>
     </div>
-  )
-}
+  );
+};
 
-export default Login
+export default Login;

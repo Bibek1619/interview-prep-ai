@@ -1,58 +1,55 @@
-import React ,{ createContext, useContext, useState } from 'react';
-import axiosInstance from '../utils/axiosinstance';
-import { API_PATHS } from '../utils/apiPaths';
-import { useEffect } from 'react';
+import React, { createContext, useState, useEffect } from "react";
+import axiosInstance from "../utils/axiosInstance";
+import { API_PATHS } from "../utils/apiPaths";
 
 export const UserContext = createContext();
 
 const UserProvider = ({ children }) => {
-    const [user, setUser] = useState(null);
-    const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        if(user) return;
-        const accessToken = localStorage.getItem("token");
-        if(!accessToken) {
-            setLoading(false);
-            return;
-            }
-            const fetchUser =async ()=>{
-                try {
-                    const response = await axiosInstance.get(API_PATHS.AUTH.GET_PROFILE);
-                setUser(response.data);
+  // Automatically fetch user on first mount if token exists
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      setLoading(false);
+      return;
+    }
+    refreshUser();
+  }, []);
 
-            }
-            catch (error) {
-                console.error("user not authenticated:", error);
-                clearUser();
-            } finally {
-                setLoading(false);
-            }
-            };
-            fetchUser();
+  // Called after login or when token exists
+  const refreshUser = async () => {
+    setLoading(true);
+    try {
+      const response = await axiosInstance.get(API_PATHS.AUTH.GET_PROFILE);
+      setUser(response.data.user);
+    } catch (error) {
+      console.error("User not authenticated:", error);
+      clearUser();
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    },[]);
+  const updateUser = (userData) => {
+    setUser(userData);
+    setLoading(false);
+  };
 
-    const updateUser = (userData) => {
-        setUser(userData);
-        // localStorage.setItem("user", userData.token);
-        setLoading(false);
-    };
-    const clearUser = () =>
-        {
-            setUser(null);
-            localStorage.removeItem("token");
-            setLoading(false);
-        }
+  const clearUser = () => {
+    setUser(null);
+    localStorage.removeItem("token");
+    setLoading(false);
+  };
 
-     
-     
+  return (
+    <UserContext.Provider
+      value={{ user, loading, updateUser, clearUser, refreshUser }}
+    >
+      {children}
+    </UserContext.Provider>
+  );
+};
 
-     return (
-        <UserContext.Provider value={{ user, loading, updateUser, clearUser }}>
-            {children}
-        </UserContext.Provider>
-     )
-    };
-
-    export default UserProvider;
+export default UserProvider;

@@ -5,8 +5,11 @@ import { useNavigate } from 'react-router-dom';
 const ProfileInfoCard = () => {
   const { user, clearUser } = useContext(UserContext);
   const navigate = useNavigate();
+    if (!user) {
+        return null; // or a placeholder if user is not logged in
+    }
+    
 
-  if (!user) return null; // 🔐 Guard against null user
 
   const handleLogout = () => {
     localStorage.clear();
@@ -15,15 +18,16 @@ const ProfileInfoCard = () => {
   };
 
   return (
+    user && (
     <div className="flex items-center">
       <img
-        src={user.profileImageUrl || "/default-profile.png"} // fallback in case of null image
+        src={user.profileImageUrl} // fallback in case of null image
         alt="User"
         className="w-11 h-11 bg-gray-300 rounded-full mr-3"
       />
       <div>
         <div className="text-[15px] text-black font-bold leading-3">
-          {user.name || "Username"}
+          {user.name || ""}
         </div>
         <button
           className="text-amber-600 text-sm font-semibold cursor-pointer hover:underline"
@@ -33,6 +37,7 @@ const ProfileInfoCard = () => {
         </button>
       </div>
     </div>
+    )
   );
 };
 
