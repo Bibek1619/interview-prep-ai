@@ -10,7 +10,7 @@ import { API_PATHS } from "../../utils/apiPaths";
 import moment from "moment";
 import { CARD_BG } from "./../../utils/data";
 import SummaryCard from "./../../components/Cards/SummaryCard";
-
+import CreateSessionForm from "./CreateSessionForm";
 import Modal from './../../components/Modal';
 
 const Dashboard = () => {

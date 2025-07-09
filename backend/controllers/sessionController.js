@@ -35,13 +35,14 @@ await session.save();
 res.status(201).json({
     success: true,
     message: 'Session created successfully',
-    data: session
+     session,
 });
 
 
-    }catch(error){
-        res.status(500).json({  success:false,message: 'Server error' });
-    }
+    }catch (error) {
+  console.error('Error creating session:', error);
+  return res.status(500).json({ success: false, message: 'Server error', error: error.message });
+}
 };
 // @desc Get session by ID
 // @route GET /api/sessions/:id
