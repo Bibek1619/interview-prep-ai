@@ -6,11 +6,16 @@ const ai = new GoogleGenAI({
   apiKey: process.env.GOOGLE_GENAI_API_KEY,
 });
 
-// 🆕 Format code blocks with visible dividers
+// 🧠 Utility: Format code blocks with proper Markdown and visual dividers
 function formatCodeBlocks(text) {
   return text
-    .replace(/```(?:javascript)?\n?/gi, "\n// -----------------------------\n//          Code Example\n// -----------------------------\n")
-    .replace(/```/g, "\n// -----------------------------\n");
+    // Match opening code blocks like ```js or ```
+    .replace(/```(\w+)?\n?/gi, (match, lang) => {
+      const language = lang || "";
+      return `\n// -----------------------------\n//         Code Example (${language})\n// -----------------------------\n\`\`\`${language}\n`;
+    })
+    // Keep closing code block fences
+    .replace(/```/g, "```");
 }
 
 // @desc Generate interview questions based on a topic
@@ -27,15 +32,13 @@ const generateInterviewQuestions = async (req, res) => {
 
     const response = await ai.models.generateContent({
       model: "gemini-2.0-flash-lite",
-      contents: prompt, // ✅ correct field
+      contents: prompt,
     });
 
     let rawText = response.text;
 
-    const cleanedText = rawText
-      .replace(/^```json\s*/i, "")
-      .replace(/```$/, "")
-      .trim();
+    // Clean only the opening ```json and the closing ``` at the end
+    const cleanedText = rawText.replace(/```json/gi, "").replace(/```$/, "").trim();
 
     const data = JSON.parse(cleanedText);
 
@@ -43,7 +46,7 @@ const generateInterviewQuestions = async (req, res) => {
       return res.status(400).json({ message: "No valid questions generated" });
     }
 
-    // 🆕 Format answers with code block markers
+    // Format answers with code fences and comment lines
     const formattedData = data.map((item) => ({
       question: item.question,
       answer: formatCodeBlocks(item.answer),
@@ -79,12 +82,8 @@ const generateConceptExplanation = async (req, res) => {
 
     let rawText = response.text;
 
-    
-    const cleanedText = rawText
-      .replace(/^```json\s*/i, "")
-      .replace(/```$/, "")
-      .trim();
-
+    // Same cleaning here: remove only wrapper triple backticks
+    const cleanedText = rawText.replace(/```json/gi, "").replace(/```$/, "").trim();
     const data = JSON.parse(cleanedText);
 
     res.status(200).json(data);
