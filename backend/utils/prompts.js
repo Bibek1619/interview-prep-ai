@@ -1,4 +1,9 @@
-const questionAnswerPrompt = (role, experience, topicsToFocus, numberOfQuestions) => (`
+const questionAnswerPrompt = (
+  role,
+  experience,
+  topicsToFocus,
+  numberOfQuestions
+) => `
 You are an AI that generates interview questions and answers.
 
 Task:
@@ -17,13 +22,14 @@ Task:
   {
     "question": "Question here?",
     "answer": "Answer here."
-  }
+  },
+  ...
 ]
 
 Important: Do NOT add any extra text. Only return valid JSON.
-`);
+`;
 
-const conceptExplainPrompt = (question) => (`
+const conceptExplainPrompt = (question) => `
 You are an AI trained to generate explanations for given interview question.
 
 Task:
@@ -36,15 +42,15 @@ Task:
 
 
 
-Return the result as valid JSON in the following format:
+
 
 {
-  "title": "Short concept title here",
-  "explanation": "Detailed explanation here..."
+  "title": "Short concept title here?",
+  "explanation": " explanation here."
 }
 
 Important: Do NOT add any extra text outside the JSON format.only return valid JSON.
-`);
+`;
 
 module.exports = {
   questionAnswerPrompt,

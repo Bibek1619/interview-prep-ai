@@ -55,7 +55,7 @@ try{
 
   const response = await axiosInstance.post(API_PATHS.SESSION.CREATE,{
     ...formData,
-   questions: aiResponse.data.questions,
+   questions: generatedQuestions,
 
   });
   if(response.data?.session?._id){

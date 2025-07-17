@@ -151,29 +151,31 @@ function CodeBlock({ code, language }) {
   };
 
 return (
-  <div className="relative bg-gray-50 border border-gray-200 rounded-lg my-6 overflow-hidden">
-    <div className="flex justify-between items-center px-4 py-2 bg-gray-100 border-b border-gray-200 ">
+  <div className="relative bg-gray-50 border border-gray-400 rounded-lg my-6 overflow-hidden">
+    <div className="flex justify-between items-center px-4 py-2 bg-gray-200 border-b border-gray-200 ">
       <div className="flex items-center space-x-2">
-        <LuCode size={16} className="text-gray-500" />
-        <span className="text-xs font-semibold text-gray-600 uppercase tracking-wide">
+        <LuCode size={16} className="text-gray-800" />
+        <span className="text-xs font-semibold text-gray-700 uppercase tracking-wide">
           {language || "code"}
         </span>
       </div>
       <button
         onClick={copyCode}
-        className="text-gray-500 hover:text-gray-700 focus:outline-none text-sm relative group"
+        className="text-gray-500 hover:text-gray-800 focus:outline-none text-sm relative group"
         aria-label="Copy code"
       >
         {copied ? (
           <LuCheck size={16} className="text-green-600" />
         ) : (
-          <LuCopy size={16} />
+          <LuCopy size={16} className="cursor-pointer" />
+        
         )}
         {copied && (
-          <span className="absolute -top-8 right-0 bg-black text-white text-xs rounded-md px-2 py-1 opacity-80 group-hover:opacity-100 transition">
-            Copied!
-          </span>
-        )}
+  <span className="absolute -top-2 right-2 bg-black text-white text-xs rounded px-2 py-1 z-50 shadow-md">
+    Copied!
+  </span>
+)}
+
       </button>
     </div>
 

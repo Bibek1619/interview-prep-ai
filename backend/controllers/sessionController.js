@@ -7,43 +7,48 @@ const Question =require('../models/Question');
 // @access Private
 
 exports.createSession = async (req, res) => {
-    try{
+  try {
+    const { role, experience, topicsToFocus, description, questions } = req.body;
+    const userId = req.user._id;
 
-      const { role, experience, topicsToFocus, description, questions } = req.body;
-const userId = req.user._id;
+    // ✅ Validation: ensure `questions` is an array
+    if (!Array.isArray(questions)) {
+      return res.status(400).json({ success: false, message: "Invalid or missing questions array" });
+    }
 
-const session = await Session.create({
-  user: userId,
-  role,
-  experience,
-  topicsToFocus,
-  description
-});
-
-const questionDocs = await Promise.all(
-  questions.map(async (q) => {
-    const question = await Question.create({
-      session: session._id,
-      question: q.question,
-      answer: q.answer,
+    const session = await Session.create({
+      user: userId,
+      role,
+      experience,
+      topicsToFocus,
+      description,
     });
-    return question._id;
-  })
-);
-session.questions = questionDocs;
-await session.save();
-res.status(201).json({
-    success: true,
-    message: 'Session created successfully',
-     session,
-});
 
+    const questionDocs = await Promise.all(
+      questions.map(async (q) => {
+        const question = await Question.create({
+          session: session._id,
+          question: q.question,
+          answer: q.answer,
+        });
+        return question._id;
+      })
+    );
 
-    }catch (error) {
-  console.error('Error creating session:', error);
-  return res.status(500).json({ success: false, message: 'Server error', error: error.message });
-}
+    session.questions = questionDocs;
+    await session.save();
+
+    res.status(201).json({
+      success: true,
+      message: "Session created successfully",
+      session,
+    });
+  } catch (error) {
+    console.error("Error creating session:", error);
+    return res.status(500).json({ success: false, message: "Server error", error: error.message });
+  }
 };
+
 // @desc Get session by ID
 // @route GET /api/sessions/:id
 // @access Private

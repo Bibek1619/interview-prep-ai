@@ -6,17 +6,8 @@ const ai = new GoogleGenAI({
   apiKey: process.env.GOOGLE_GENAI_API_KEY,
 });
 
-// 🧠 Utility: Format code blocks with proper Markdown and visual dividers
-function formatCodeBlocks(text) {
-  return text
-    // Match opening code blocks like ```js or ```
-    .replace(/```(\w+)?\n?/gi, (match, lang) => {
-      const language = lang || "";
-      return `\n// -----------------------------\n//         Code Example (${language})\n// -----------------------------\n\`\`\`${language}\n`;
-    })
-    // Keep closing code block fences
-    .replace(/```/g, "```");
-}
+
+
 
 // @desc Generate interview questions based on a topic
 // @route POST /api/ai/generate-questions
@@ -38,24 +29,14 @@ const generateInterviewQuestions = async (req, res) => {
     let rawText = response.text;
 
     // Clean only the opening ```json and the closing ``` at the end
-    const cleanedText = rawText.replace(/```json/gi, "").replace(/```$/, "").trim();
+   const cleanedText = rawText.replace(/```json\s*/i, "").replace(/```$/, "").trim();
+
 
     const data = JSON.parse(cleanedText);
 
-    if (!Array.isArray(data) || data.length === 0) {
-      return res.status(400).json({ message: "No valid questions generated" });
-    }
+  res.status(200).json(data);
 
-    // Format answers with code fences and comment lines
-    const formattedData = data.map((item) => ({
-      question: item.question,
-      answer: formatCodeBlocks(item.answer),
-    }));
-
-    res.status(200).json({
-      message: "Interview questions generated successfully",
-      questions: formattedData,
-    });
+    
   } catch (error) {
     res.status(500).json({
       message: "Server Error - Failed to generate questions",
@@ -71,7 +52,7 @@ const generateConceptExplanation = async (req, res) => {
   try {
     const { question } = req.body;
     if (!question) {
-      return res.status(400).json({ message: "Please provide a concept" });
+      return res.status(400).json({ message: "Please provide a concept or missing required field" });
     }
 
     const prompt = conceptExplainPrompt(question);
@@ -83,7 +64,11 @@ const generateConceptExplanation = async (req, res) => {
     let rawText = response.text;
 
     // Same cleaning here: remove only wrapper triple backticks
-    const cleanedText = rawText.replace(/```json/gi, "").replace(/```$/, "").trim();
+   const cleanedText = rawText
+  .replace(/```json\s*/i, "")  // removes starting ```json and any whitespace
+  .replace(/```$/, "")         // removes closing ```
+  .trim();
+
     const data = JSON.parse(cleanedText);
 
     res.status(200).json(data);
