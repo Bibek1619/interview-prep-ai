@@ -141,7 +141,7 @@ const LandingPage = () => {
           </div>
         </div>
 
-        <div className="text-sm bg-gray-100 text-secondary text-center p-5 mt-5">Made with ❤️...</div>
+        <div className="text-sm bg-gray-100 text-secondary text-center p-5 mt-5">Made with........................................................................</div>
       </div>
 
 

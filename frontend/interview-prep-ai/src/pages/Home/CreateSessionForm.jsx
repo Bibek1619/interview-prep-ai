@@ -68,11 +68,14 @@ try{
 
 }
 catch(error){
-  if(error.response && error.response.message){
-    seterror("something went wrong.plese try again.")
+  console.error("AI generation error:", error);
+  if(error.response && error.response.data?.error?.message){
+    seterror(error.response.data.error.message);
+  } else {
+    seterror("Server error: Failed to generate questions. Please try again later.");
   }
-  
 }
+
 finally{
   setLoading(false)
 
