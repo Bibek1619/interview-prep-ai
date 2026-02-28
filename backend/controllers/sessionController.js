@@ -86,7 +86,6 @@ res.status(200).json({
     data: session
 })
 
-
     }catch(error){
         res.status(500).json({  success:false,message: 'Server error' });
     }
