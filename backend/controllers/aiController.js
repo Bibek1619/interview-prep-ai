@@ -38,6 +38,8 @@ const generateInterviewQuestions = async (req, res) => {
 
     
   } catch (error) {
+     console.error("AI generation error (full object):", error);
+  console.error("Error details:", JSON.stringify(error, null, 2));
     res.status(500).json({
       message: "Server Error - Failed to generate questions",
       error: error.message,
